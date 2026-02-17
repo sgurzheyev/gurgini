@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <title>NEURAL BREACH v13.37</title>
+    <style>
+        body, html {
+            margin:0; padding:0; height:100%; background:#000; color:#0f0;
+            font-family: 'Courier New', Consolas, monospace; font-size:14px;
+            overflow:hidden; touch-action:manipulation;
+        }
+        #terminal {
+            padding:16px; height:100%; overflow-y:scroll; white-space:pre-wrap;
+            word-break:break-all; line-height:1.4;
+        }
+        ::-webkit-scrollbar { display: none; } /* скрыть скроллбар на iPhone */
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+
+    <script>
+        const term = document.getElementById('terminal');
+        let lines = [];
+
+        const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        const randomIP = () => [rand(1,255), rand(0,255), rand(0,255), rand(0,255)].join('.');
+        const randomHex = () => rand(0,255).toString(16).padStart(2,'0').toUpperCase();
+        const randomReg = () => ['eax','ebx','rcx','rdx','rsi','rdi'][rand(0,5)];
+
+        const msgs = [
+            () => `>> ACCESSING ${randomIP()} ... [GRANTED]`,
+            () => `BRUTEFORCE: ${rand(100000,999999)} attempts/sec`,
+            () => `TRANSFER $${(Math.random()*8000000 + 1000000).toFixed(2)} BTC → 0x${rand(0,0xFFFFFFFF).toString(16).padStart(8,'0')}`,
+            () => `ROOTKIT DEPLOYED → FULL COMPROMISE`,
+            () => `jmp ${randomHex()} ${randomReg()} ${randomHex()}`,
+            () => `VULN SCAN: crypto.gov → ${rand(30,99)} exploits (CVE-2026-${rand(1000,9999)})`,
+            () => `DUMP: admin:${Math.random().toString(36).slice(2,15)}`,
+            () => `PAYLOAD EXEC ... [SUCCESS]`
+        ];
+
+        function addLine() {
+            const line = msgs[rand(0, msgs.length-1)]();
+            lines.push(line);
+            if (lines.length > 45) lines.shift();
+            term.innerHTML = lines.join('\n');
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // Начальные строки для драматического эффекта
+        [
+            "NEURAL BREACH PROTOCOL v13.37 INITIALIZING...",
+            "TARGET LOCK: federal-reserve.core",
+            "QUANTUM WALL BREACH... [SUCCESS]",
+            "AES-512 → CRACKED IN 0.004s",
+            "─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─",
+            ""
+        ].forEach(l => lines.push(l));
+
+        setInterval(addLine, 130); // скорость как в твоём SwiftUI
+    </script>
+</body>
+</html>

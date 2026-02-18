@@ -5,25 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <title>NEURAL BREACH v13.37</title>
+    <title>SYSTEM BREACH DETECTED</title>
     <style>
-        body, html {
-            margin:0; padding:0; height:100%; background:#000; color:#0f0;
-            font-family: 'Courier New', Consolas, monospace; font-size:14px;
-            overflow:hidden; touch-action:manipulation;
-        }
-        #terminal {
-            padding:16px; height:100%; overflow-y:scroll; white-space:pre-wrap;
-            word-break:break-all; line-height:1.4;
-        }
-        ::-webkit-scrollbar { display: none; } /* скрыть скроллбар на iPhone */
+        body, html { margin:0; padding:0; height:100%; background:#000; color:#0f0; font-family: 'Courier New', monospace; font-size:14px; overflow:hidden; touch-action:none; }
+        #terminal { padding:16px; height:100%; overflow-y:scroll; white-space:pre-wrap; word-break:break-all; line-height:1.4; position:relative; z-index:2; }
+        #matrix { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; pointer-events:none; opacity:0.3; }
+        ::-webkit-scrollbar { display:none; }
     </style>
 </head>
-<body>
+<body onload="startHack()">
+    <canvas id="matrix"></canvas>
     <div id="terminal"></div>
+
+    <audio id="sound" src="https://freesound.org/data/previews/245/245645_1843844-lq.mp3" preload="auto"></audio> <!-- фейковый звук, замени на свой URL если нужно -->
 
     <script>
         const term = document.getElementById('terminal');
+        const audio = document.getElementById('sound');
         let lines = [];
 
         const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -31,10 +29,75 @@
         const randomHex = () => rand(0,255).toString(16).padStart(2,'0').toUpperCase();
         const randomReg = () => ['eax','ebx','rcx','rdx','rsi','rdi'][rand(0,5)];
 
+        const device = navigator.userAgent.match(/iPhone|iPad|Android/); // фейковый детект устройства
+
         const msgs = [
-            () => `>> ACCESSING ${randomIP()} ... [GRANTED]`,
-            () => `BRUTEFORCE: ${rand(100000,999999)} attempts/sec`,
-            () => `TRANSFER $${(Math.random()*8000000 + 1000000).toFixed(2)} BTC → 0x${rand(0,0xFFFFFFFF).toString(16).padStart(8,'0')}`,
+            () => `>> DEVICE SCAN: ${device ? device[0] : 'Unknown Device'} ... [DETECTED]`,
+            () => `ACCESSING ${randomIP()} ... [GRANTED]`,
+            () => `BRUTEFORCE: ${rand(500000,999999)} attempts/sec`,
+            () => `TRANSFER $${(Math.random()*10000000 + 5000000).toFixed(2)} BTC → 0x${rand(0,0xFFFFFFFF).toString(16).padStart(8,'0')}`,
+            () => `ROOTKIT DEPLOYED → COMPROMISE LEVEL: 100%`,
+            () => `mov ${randomHex()} ${randomReg()} ${randomHex()}`,
+            () => `VULN EXPLOIT: database.gov → ${rand(50,150)} entries dumped (CVE-2026-${rand(1000,9999)})`,
+            () => `DUMPING CONTACTS: admin:${Math.random().toString(36).slice(2,15)}`,
+            () => `CAMERA ACCESS ... [SUCCESS]`,
+            () => `LOCATION PING: Cairo, EG ... [TRACKED]`,
+            () => `WARNING: FBI ALERT TRIGGERED ... [BYPASSED]`
+        ];
+
+        function addLine() {
+            const line = msgs[rand(0, msgs.length-1)]();
+            lines.push(line);
+            if (lines.length > 45) lines.shift();
+            term.innerHTML = lines.join('\n');
+            term.scrollTop = term.scrollHeight;
+            if (rand(0,3) === 0) navigator.vibrate([100,50,100]); // вибрация
+        }
+
+        // Начальные строки
+        [
+            "CRITICAL BREACH PROTOCOL ACTIVATED v666.13",
+            "TARGET LOCK: Your Device",
+            "FIREWALL PENETRATION... [99%]",
+            "ENCRYPTION CRACKED IN 0.001s",
+            "─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─",
+            ""
+        ].forEach(l => lines.push(l));
+
+        setInterval(addLine, 100); // быстрее для драмы
+
+        function startHack() {
+            audio.play().catch(() => {}); // звук
+            navigator.vibrate([200,100,200,100,200]); // стартовая вибрация
+            setTimeout(() => alert("SYSTEM COMPROMISED! DO NOT CLOSE!"), 5000); // фейковый алерт через 5 сек
+        }
+
+        // Matrix дождь
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        const matrix = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for (let x = 0; x < columns; x++) drops[x] = 1;
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0F0";
+            ctx.font = fontSize + "px arial";
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrix[Math.floor(Math.random() * matrix.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+    </script>
+</body>
+</html>            () => `TRANSFER $${(Math.random()*8000000 + 1000000).toFixed(2)} BTC → 0x${rand(0,0xFFFFFFFF).toString(16).padStart(8,'0')}`,
             () => `ROOTKIT DEPLOYED → FULL COMPROMISE`,
             () => `jmp ${randomHex()} ${randomReg()} ${randomHex()}`,
             () => `VULN SCAN: crypto.gov → ${rand(30,99)} exploits (CVE-2026-${rand(1000,9999)})`,
